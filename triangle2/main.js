@@ -100,13 +100,28 @@ function main()
 	let projMatrix = new Float32Array(16);
 	
 	mat4.identity(worldMatrix);
-	mat4.lookAt(viewMatrix,[0,0,-10],[0,0,0],[0,1,0]);
+	mat4.lookAt(viewMatrix,[0,0,-3],[0,0,0],[0,1,0]);
 	mat4.perspective(projMatrix,glMatrix.toRadian(45),canvas.width/canvas.height,0.1,1000.0);
 
 	gl.uniformMatrix4fv(matWorldUniformLocation,gl.FALSE,worldMatrix);
 	gl.uniformMatrix4fv(matViewUniformLocation,gl.FALSE,viewMatrix);
 	gl.uniformMatrix4fv(matProjUniformLocation,gl.FALSE,projMatrix);
 
+	let angle = 0;
+	let identitye = new Float32Array(16);
+	mat4.identity(identitye);
+	var loop = function(){
+		angle = performance.now()/1000/6*2*Math.PI;
 
-	gl.drawArrays(gl.TRIANGLES,0,3);
+		mat4.rotate(worldMatrix,identitye,angle,[1,1,1])
+
+		gl.uniformMatrix4fv(matWorldUniformLocation,gl.FALSE,worldMatrix)
+
+		gl.clearColor(angle/15,angle/6,angle/12,1.0)
+		gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT)
+		gl.drawArrays(gl.TRIANGLES,0,3);
+		requestAnimationFrame(loop);
+	};
+	requestAnimationFrame(loop);
+	
 } 
