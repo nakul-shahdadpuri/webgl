@@ -100,8 +100,8 @@ function main()
 	let projMatrix = new Float32Array(16);
 	
 	mat4.identity(worldMatrix);
-	mat4.identity(viewMatrix);
-	mat4.identity(projMatrix);
+	mat4.lookAt(viewMatrix,[0,0,-10],[0,0,0],[0,1,0]);
+	mat4.perspective(projMatrix,glMatrix.toRadian(45),canvas.width/canvas.height,0.1,1000.0);
 
 	gl.uniformMatrix4fv(matWorldUniformLocation,gl.FALSE,worldMatrix);
 	gl.uniformMatrix4fv(matViewUniformLocation,gl.FALSE,viewMatrix);
