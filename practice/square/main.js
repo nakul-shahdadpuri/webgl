@@ -21,7 +21,21 @@ let fragmentShaderText =
 '}'
 ].join('\n');
 
+let squareVertices = 
+	[
+		//x,y	
+		0,0.5,
+		0.5,0,
+		0,0,
+		0.5,0.5,
 
+	]
+let squareIndices = 
+	[
+		0,1,2,
+		0,3,1,
+
+	]
 
 function main()
 {
@@ -33,11 +47,10 @@ function main()
 	let program = load_shaders(gl);
 	gl.linkProgram(program);
 
-	squareVertices = square_vertex();
-	buffers(program,gl,squareVertices);
+	buffers(program,gl,squareVertices,squareIndices);
 
 	inputing(program,gl);
-	draw(gl);
+	draw(gl,squareIndices);
 
 }
 
@@ -65,22 +78,17 @@ function load_shaders(gl){
 	return program
 }
 
-function square_vertex(){
-	let vertices = 
-	[
-		//x,y	
-		0.15,0.15,	
-		-0.15,-0.15,
-		-0.15,0.15,
-	]
-	return vertices
-}
-
 function buffers(program,gl,squareVertices){
 
 	let squareVertexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER,squareVertexBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(squareVertices),gl.STATIC_DRAW);
+
+
+	let squareIndicesBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,squareIndicesBuffer);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(squareIndices),gl.STATIC_DRAW);
+
 }
 
 function inputing(program,gl){
@@ -99,5 +107,5 @@ function inputing(program,gl){
 
 function draw(gl)
 {
-	gl.drawArrays(gl.TRIANGLES,0,3);
+	gl.drawElements(gl.TRIANGLES,squareIndices.length,gl.UNSIGNED_SHORT,0);
 }
